@@ -2,7 +2,6 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:ecommerceui/constants/colors.dart';
 import 'package:ecommerceui/pages/mainpage.dart';
 import 'package:flutter/material.dart';
-
 import 'home_page.dart';
 
 class NavBar extends StatefulWidget {
@@ -15,16 +14,14 @@ class NavBar extends StatefulWidget {
 class _NavBarState extends State<NavBar> {
   int _page = 0;
 
-  final _pageController = PageController(initialPage: 0);
-
-  int maxCount = 5;
+  final _pageController = PageController();
 
   /// widget list
   final List<Widget> bottomBarPages = [
     HomePage(),
     MainPage(),
   ];
-
+  int maxCount = 5;
   @override
   void dispose() {
     _pageController.dispose();
@@ -43,18 +40,17 @@ class _NavBarState extends State<NavBar> {
     Icons.person_outline_outlined,
   ];
   var _bottomNavIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Bg,
       body: PageView(
         controller: _pageController,
         physics: const NeverScrollableScrollPhysics(),
         children: List.generate(
-          bottomBarPages.length,
-          (index) => bottomBarPages[index],
-        ),
+            bottomBarPages.length, (index) => bottomBarPages[index]),
       ),
+      extendBody: true,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Button,
         child: Icon(
@@ -65,42 +61,35 @@ class _NavBarState extends State<NavBar> {
         //params
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(25),
-            topRight: Radius.circular(25),
-          ),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 20,
-              color: Colors.black.withOpacity(.1),
+      bottomNavigationBar: (bottomBarPages.length <= maxCount)
+          ? AnimatedBottomNavigationBar(
+              leftCornerRadius: 25,
+              backgroundColor: primaryColor,
+              rightCornerRadius: 25,
+              icons: iconList,
+              activeIndex: _bottomNavIndex,
+              gapLocation: GapLocation.center,
+              notchSmoothness: NotchSmoothness.softEdge,
+              splashColor: Button,
+              inactiveColor: Colors.white,
+              activeColor: Button,
+              onTap: (index) {
+                /// control your animation using page controller
+                setState(
+                  () {
+                    _bottomNavIndex = index;
+                  },
+                );
+                _pageController.animateToPage(
+                  index,
+                  duration: const Duration(
+                    milliseconds: 300,
+                  ),
+                  curve: Curves.easeIn,
+                );
+              },
             )
-          ],
-        ),
-        child: AnimatedBottomNavigationBar(
-          leftCornerRadius: 25,
-          backgroundColor: primaryColor,
-          rightCornerRadius: 25,
-          icons: iconList,
-          activeIndex: _bottomNavIndex,
-          gapLocation: GapLocation.center,
-          notchSmoothness: NotchSmoothness.softEdge,
-          splashColor: Button,
-          inactiveColor: Colors.white,
-          activeColor: Button,
-          onTap: (index) {
-            /// control your animation using page controller
-            _pageController.animateToPage(
-              index,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeIn,
-            );
-          },
-          //other params
-        ),
-      ),
+          : null,
     );
   }
 }
