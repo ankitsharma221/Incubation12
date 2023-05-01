@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../decoration.dart';
+
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -8,6 +10,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  List a = ["image1.png"];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,6 +84,38 @@ class _MainPageState extends State<MainPage> {
                   ),
                 ),
               ],
+            ),
+            SizedBox(
+              height: 41,
+            ),
+            ListView.builder(
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  width: 130,
+                  height: 130,
+                  decoration: BoxDecoration(
+                      color: Color(0xFF232327),
+                      borderRadius: BorderRadius.circular(25)),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 200,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: Color.fromRGBO(36, 33, 33, 1),
+                        ),
+                        child: Image.asset(
+                          a[index],
+                          height: 100,
+                        ),
+                      ),
+                      Container(
+                        child: Text('Ankit'),
+                      )
+                    ],
+                  ),
+                );
+              },
             ),
           ],
         ),
